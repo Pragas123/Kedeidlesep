@@ -27,7 +27,6 @@
   }
   ::selection{background:var(--primary-light); color:var(--primary-dark)}
 
-  /* HEADER */
   header{
     position:sticky; top:0; z-index:50;
     background:rgba(255,255,255,.92);
@@ -51,7 +50,7 @@
   }
   nav{display:flex; gap:4px; background:#f1f4f7; padding:4px; border-radius:11px}
   .tab{
-    border:0; background:transparent; padding:8px 14px; border-radius:8px;
+    border:0; background:transparent; padding:8px 12px; border-radius:8px;
     font-weight:700; font-size:13px; color:var(--muted); cursor:pointer;
     transition:.15s; display:flex; align-items:center; gap:6px; font-family:inherit;
   }
@@ -72,10 +71,22 @@
   h2{font-size:21px; margin-bottom:4px; letter-spacing:-.4px; font-weight:800}
   .sub{color:var(--muted); font-size:13px; margin-bottom:18px; line-height:1.5}
 
-  /* MENU */
-  .menu-grid{
-    display:grid; grid-template-columns:repeat(2,1fr); gap:10px;
+  .live-dot{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:800; color:var(--ok);
+    background:#d1fae5; padding:4px 10px; border-radius:20px;
+    letter-spacing:.5px;
   }
+  .live-dot::before{
+    content:''; width:7px; height:7px; border-radius:50%;
+    background:var(--ok); animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1; transform:scale(1)}
+    50%{opacity:.4; transform:scale(.8)}
+  }
+
+  .menu-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
   .card{
     background:var(--card); border:1px solid var(--line);
     border-radius:16px; padding:14px; position:relative;
@@ -92,12 +103,14 @@
   }
   .card-name{font-weight:800; font-size:14.5px; line-height:1.25; letter-spacing:-.2px; color:var(--text)}
   .card-price{color:var(--primary-dark); font-weight:900; font-size:15px; letter-spacing:-.3px}
-  .card-tag{
+  .card-stock{
     position:absolute; top:12px; right:12px;
-    background:#fef3c7; color:#92400e;
     font-size:9.5px; font-weight:900; padding:3px 8px;
     border-radius:6px; letter-spacing:.5px;
   }
+  .card-stock.available{background:#d1fae5; color:#047857}
+  .card-stock.low{background:#fef3c7; color:#92400e}
+  .card-stock.out{background:#fecaca; color:#b91c1c}
   .card-add{
     margin-top:auto; background:#f1f9f8; color:var(--primary-dark);
     border:1px solid #d5ebe8; padding:9px; border-radius:10px;
@@ -106,8 +119,8 @@
     transition:.15s;
   }
   .card:hover .card-add{background:var(--primary); color:#fff; border-color:var(--primary)}
+  .card.disabled{opacity:.5; pointer-events:none}
 
-  /* FLOATING CART */
   .cart-float{
     position:fixed; bottom:14px; left:16px; right:16px; z-index:70;
     background:#fff; border:1px solid var(--line);
@@ -116,8 +129,14 @@
     box-shadow:var(--shadow-lg);
     animation:slideUp .3s cubic-bezier(.2,.9,.3,1.2);
     max-width:728px; margin:0 auto;
+    transition:transform .25s ease, opacity .25s ease;
   }
   .cart-float.show{display:flex}
+  .cart-float.hide-for-form{
+    transform:translateY(140%);
+    opacity:0;
+    pointer-events:none;
+  }
   @keyframes slideUp{from{transform:translateY(120%);opacity:0}to{transform:translateY(0);opacity:1}}
   .cf-count{
     background:linear-gradient(135deg,#0d9488,#14b8a6);
@@ -137,7 +156,6 @@
   }
   .cf-btn:active{transform:scale(.96)}
 
-  /* PANEL */
   .panel{
     background:var(--card); border:1px solid var(--line);
     border-radius:16px; padding:18px; margin-top:16px;
@@ -190,7 +208,6 @@
   }
   .total-row .amt{color:var(--primary-dark); font-size:20px; font-weight:900; letter-spacing:-.5px}
 
-  /* FORM */
   .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px}
   .field{display:flex; flex-direction:column; gap:6px}
   .field.full{grid-column:1/-1}
@@ -198,14 +215,14 @@
     font-size:11px; font-weight:800; color:var(--muted);
     letter-spacing:.5px; text-transform:uppercase;
   }
-  input, textarea{
+  input, textarea, select{
     border:1.5px solid var(--line2); background:#fafcfd;
     border-radius:12px; padding:13px 14px; font-size:14px;
     font-family:inherit; color:var(--text); outline:none;
     transition:.15s; width:100%; font-weight:600;
   }
   input::placeholder{color:#9aa8b8; font-weight:500}
-  input:focus, textarea:focus{
+  input:focus, textarea:focus, select:focus{
     border-color:var(--primary); background:#fff;
     box-shadow:0 0 0 3px rgba(13,148,136,.12);
   }
@@ -231,7 +248,19 @@
   }
   .btn-ghost:hover{background:#f1f9f8; border-color:var(--primary); color:var(--primary-dark)}
 
-  /* SUCCESS */
+  .btn-maps{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:15px; border-radius:14px;
+    background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff;
+    font-weight:800; font-size:14.5px; text-decoration:none;
+    box-shadow:0 6px 16px rgba(245,158,11,.28);
+    letter-spacing:-.2px; transition:.15s; cursor:pointer; border:0;
+    font-family:inherit;
+  }
+  .btn-maps:hover{filter:brightness(1.05)}
+  .btn-maps:active{transform:scale(.98)}
+  .btn-maps .stars{font-size:15px; letter-spacing:1px}
+
   .success{
     text-align:center; padding:56px 24px; background:#fff;
     border-radius:20px; border:1px solid var(--line);
@@ -254,7 +283,6 @@
     letter-spacing:2px; border:1.5px dashed rgba(13,148,136,.5);
   }
 
-  /* ADMIN */
   .subtabs{
     display:flex; gap:6px; margin-bottom:16px; overflow-x:auto;
     padding-bottom:6px; scrollbar-width:none;
@@ -300,6 +328,12 @@
     border-radius:14px; padding:14px 16px;
     display:flex; align-items:center; gap:14px;
     box-shadow:var(--shadow-sm);
+    cursor:pointer; transition:.15s;
+  }
+  .kitchen-item:hover{border-color:var(--primary); background:#f0fdf9}
+  .kitchen-item.done{opacity:.5; background:#f0fdf9}
+  .kitchen-item input[type=checkbox]{
+    width:24px; height:24px; accent-color:var(--primary); cursor:pointer; flex-shrink:0;
   }
   .kitchen-qty{
     background:linear-gradient(135deg,#0d9488,#14b8a6); color:#fff;
@@ -449,7 +483,50 @@
   .radio-opt .ro-title{font-weight:800; font-size:13.5px}
   .radio-opt .ro-desc{font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.5}
 
-  /* SHEET */
+  .stock-item{
+    display:flex; align-items:center; gap:12px; padding:14px;
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    margin-bottom:8px;
+  }
+  .stock-info{flex:1; min-width:0}
+  .stock-name{font-weight:800; font-size:14px}
+  .stock-detail{font-size:11.5px; color:var(--muted); margin-top:4px; font-weight:600; line-height:1.5}
+  .stock-detail b{color:var(--primary-dark)}
+  .stock-control{display:flex; align-items:center; gap:8px}
+  .stock-control button{
+    width:32px; height:32px; border-radius:9px; border:1px solid var(--line2);
+    background:#f7f9fb; font-size:16px; font-weight:800; color:var(--primary-dark);
+    cursor:pointer; font-family:inherit;
+  }
+  .stock-control button:active{transform:scale(.9); background:var(--primary); color:#fff}
+  .stock-control input{
+    width:60px; text-align:center; padding:8px; font-size:14px; font-weight:800;
+  }
+
+  .toggle-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px; background:#fff; border:1px solid var(--line);
+    border-radius:14px; margin-bottom:10px;
+  }
+  .toggle-info{flex:1}
+  .toggle-title{font-weight:800; font-size:14px}
+  .toggle-desc{font-size:11.5px; color:var(--muted); margin-top:4px; font-weight:600}
+  .switch{
+    position:relative; width:52px; height:30px; flex-shrink:0;
+  }
+  .switch input{opacity:0; width:0; height:0}
+  .slider{
+    position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
+    background:#cbd5e1; transition:.3s; border-radius:30px;
+  }
+  .slider:before{
+    position:absolute; content:""; height:24px; width:24px;
+    left:3px; bottom:3px; background:#fff; transition:.3s; border-radius:50%;
+    box-shadow:0 1px 3px rgba(0,0,0,.2);
+  }
+  .switch input:checked + .slider{background:var(--primary)}
+  .switch input:checked + .slider:before{transform:translateX(22px)}
+
   .sheet-bg{
     position:fixed; inset:0; background:rgba(15,23,42,.5); z-index:100;
     display:none; align-items:flex-end; justify-content:center;
@@ -515,6 +592,9 @@
   .sheet-opsi button.active{
     border-color:var(--primary); background:#f0fdf9;
   }
+  .sheet-opsi button:disabled{
+    opacity:.4; cursor:not-allowed; border-color:var(--line);
+  }
   .sheet-opsi .oi-ico{font-size:26px}
   .sheet-opsi .oi-lbl{font-weight:900; font-size:14px; letter-spacing:-.2px}
   .sheet-opsi button.active .oi-lbl{color:var(--primary-dark)}
@@ -540,7 +620,6 @@
   }
   .sheet-btn:active{transform:scale(.98)}
 
-  /* TOAST */
   #toast{
     position:fixed; bottom:100px; left:50%;
     transform:translateX(-50%) translateY(140px);
@@ -553,7 +632,6 @@
   #toast.ok{background:#047857}
   #toast.err{background:#b91c1c}
 
-  /* PROGRESS */
   .progress{
     height:4px; background:#eef2f6; border-radius:2px;
     overflow:hidden; margin-bottom:14px;
@@ -563,13 +641,155 @@
     transition:.4s ease-out;
   }
 
+  /* REALTIME STATUS */
+  .rt-section-title{
+    font-size:12px; font-weight:900; color:var(--muted);
+    letter-spacing:1.5px; text-transform:uppercase;
+    margin:22px 0 12px; display:flex; align-items:center; gap:8px;
+  }
+  .rt-section-title:first-of-type{margin-top:0}
+  .rt-section-title .count-badge{
+    background:var(--primary-light); color:var(--primary-dark);
+    font-size:10px; padding:3px 8px; border-radius:8px;
+  }
+
+  .rt-card{
+    background:#fff; border:1px solid var(--line);
+    border-radius:16px; padding:16px; margin-bottom:12px;
+    box-shadow:var(--shadow-sm); position:relative; overflow:hidden;
+  }
+  .rt-card.active::before{
+    content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:linear-gradient(180deg,#0d9488,#14b8a6);
+  }
+  .rt-card.done{background:#f0fdf9; border-color:#a7f3d0}
+  .rt-card-head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:10px; margin-bottom:12px;
+  }
+  .rt-card-name{font-weight:900; font-size:15.5px; letter-spacing:-.3px}
+  .rt-card-meta{font-size:11.5px; color:var(--muted); margin-top:4px; font-weight:600}
+  .rt-badge{
+    font-size:10px; font-weight:900; padding:5px 10px; border-radius:8px;
+    letter-spacing:.5px; white-space:nowrap;
+  }
+  .rt-badge.done{background:#d1fae5; color:#047857}
+  .rt-badge.process{background:#fef3c7; color:#92400e}
+  .rt-badge.wait{background:#e2e8ef; color:#64748b}
+
+  .rt-queue-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    background:linear-gradient(135deg,#0d9488,#14b8a6); color:#fff;
+    font-size:11px; font-weight:900; padding:5px 12px; border-radius:8px;
+    letter-spacing:.5px; box-shadow:0 2px 6px rgba(13,148,136,.3);
+    margin-bottom:8px;
+  }
+  .rt-queue-badge small{font-size:10px; opacity:.85; font-weight:700}
+
+  .rt-progress{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:11px; font-weight:800; color:var(--muted); margin-bottom:6px;
+  }
+  .rt-progress .bar{
+    height:5px; background:#eef2f6; border-radius:3px;
+    overflow:hidden; margin-bottom:14px;
+  }
+  .rt-progress .bar > div{
+    height:100%; background:linear-gradient(90deg,#0d9488,#14b8a6);
+    transition:.6s ease-out;
+  }
+
+  .rt-items{display:flex; flex-direction:column; gap:6px}
+  .rt-item{
+    display:flex; align-items:center; gap:10px; padding:9px 10px;
+    border-radius:10px; background:#f7f9fb;
+    transition:.3s;
+  }
+  .rt-item.done{background:#ecfdf5}
+  .rt-item .dot{
+    width:20px; height:20px; border-radius:50%; flex-shrink:0;
+    border:2px solid var(--line2); background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:900; color:#fff;
+    transition:.3s;
+  }
+  .rt-item.done .dot{
+    background:var(--primary); border-color:var(--primary);
+  }
+  .rt-item .txt{flex:1; font-size:13px; font-weight:700; line-height:1.3}
+  .rt-item.done .txt{color:var(--muted)}
+  .rt-item .txt small{
+    display:block; font-size:10.5px; color:var(--muted);
+    font-weight:600; margin-top:2px;
+  }
+  .rt-item .qty-tag{
+    font-size:11px; font-weight:900; color:var(--primary-dark);
+    background:#fff; padding:3px 8px; border-radius:6px;
+    border:1px solid var(--line);
+  }
+  .rt-item.done .qty-tag{background:var(--primary); color:#fff; border-color:var(--primary)}
+
+  .rt-maps-cta{
+    margin-top:14px; padding-top:14px;
+    border-top:1px dashed var(--line2);
+  }
+  .rt-maps-cta a{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff;
+    padding:12px 16px; border-radius:12px; font-weight:800;
+    font-size:13px; text-decoration:none;
+    box-shadow:0 4px 12px rgba(245,158,11,.28);
+    transition:.15s;
+  }
+  .rt-maps-cta a:hover{filter:brightness(1.05)}
+  .rt-maps-cta a:active{transform:scale(.98)}
+
+  .rt-empty{
+    text-align:center; padding:48px 20px; color:var(--muted);
+  }
+  .rt-empty .ico{font-size:52px; display:block; margin-bottom:12px; opacity:.4}
+  .rt-empty b{display:block; font-size:15px; font-weight:800; color:var(--text); margin-bottom:6px}
+  .rt-empty p{font-size:12.5px; line-height:1.6}
+
+  .maps-banner{
+    background:linear-gradient(135deg,#fff7ed,#ffedd5);
+    border:1px solid #fed7aa; border-radius:14px;
+    padding:14px 16px; margin-bottom:16px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .maps-banner .ico{
+    width:42px; height:42px; border-radius:12px;
+    background:linear-gradient(135deg,#f59e0b,#f97316);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; flex-shrink:0;
+    box-shadow:0 3px 10px rgba(245,158,11,.3);
+  }
+  .maps-banner .txt{flex:1; min-width:0}
+  .maps-banner .txt b{
+    display:block; font-size:13.5px; font-weight:900; color:#9a3412;
+    margin-bottom:3px;
+  }
+  .maps-banner .txt small{
+    font-size:11.5px; color:#c2410c; font-weight:600; line-height:1.4;
+    display:block;
+  }
+  .maps-banner a{
+    background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff;
+    padding:9px 14px; border-radius:10px; font-size:12px; font-weight:900;
+    text-decoration:none; white-space:nowrap; flex-shrink:0;
+    box-shadow:0 3px 8px rgba(245,158,11,.3);
+  }
+
   @media(max-width:420px){
     .brand .txt b{font-size:14px}
     .brand .txt small{font-size:9px; letter-spacing:1.4px}
     .brand .logo{width:34px; height:34px; font-size:17px}
-    .tab{padding:7px 11px; font-size:12.5px}
+    .tab{padding:7px 10px; font-size:12px}
     .kitchen-total .val{font-size:36px}
     h2{font-size:19px}
+    .form-grid{grid-template-columns:1fr}
+    .maps-banner{flex-wrap:wrap}
+    .maps-banner a{width:100%; text-align:center}
   }
 </style>
 </head>
@@ -583,9 +803,9 @@
       <small>WARUNG MAKAN</small>
     </div>
   </div>
-  <nav>
+  <nav id="mainNav">
     <button class="tab active" data-view="order">Menu</button>
-    <button class="tab" data-view="admin">Admin <span class="pill hide" id="pendingPill">0</span></button>
+    <button class="tab" data-view="status">Status <span class="pill hide" id="statusPill">0</span></button>
   </nav>
 </header>
 
@@ -594,6 +814,15 @@
   <section class="view active" id="view-order">
     <h2>Pilih Menu</h2>
     <p class="sub">Tap menu untuk pilih varian &amp; bungkus</p>
+
+    <div class="maps-banner">
+      <div class="ico">⭐</div>
+      <div class="txt">
+        <b>Sudah pernah makan di sini?</b>
+        <small>Bantu kami dengan review di Google Maps 🙏</small>
+      </div>
+      <a href="https://maps.app.goo.gl/nPcgtixXSMi6xT1ZA" target="_blank" rel="noopener" data-maps-link>Review</a>
+    </div>
 
     <div class="menu-grid" id="menuGrid"></div>
 
@@ -607,7 +836,7 @@
         </div>
       </div>
 
-      <div class="panel">
+      <div class="panel" id="formPanel">
         <h3><span class="num">2</span> Data Pemesan</h3>
         <div class="progress"><div class="progress-bar" id="formProgress" style="width:0%"></div></div>
         <div class="form-grid">
@@ -633,6 +862,15 @@
     </div>
   </section>
 
+  <section class="view" id="view-status">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:4px">
+      <h2>Antrian &amp; Status</h2>
+      <span class="live-dot">LIVE</span>
+    </div>
+    <p class="sub">Pantau antrian dan progres masak secara realtime</p>
+    <div id="statusLive"></div>
+  </section>
+
   <section class="view" id="view-admin">
     <h2>Panel Admin</h2>
     <p class="sub">Centang item sesuai antrian. WA otomatis terkirim saat pesanan selesai.</p>
@@ -640,6 +878,7 @@
     <div class="subtabs">
       <button class="subtab active" data-sub="antrian">📋 Antrian <span class="pill gray" id="tabAntrianCount">0</span></button>
       <button class="subtab" data-sub="dapur">🍳 Dapur</button>
+      <button class="subtab" data-sub="stock">📦 Stok</button>
       <button class="subtab" data-sub="riwayat">📁 Riwayat</button>
       <button class="subtab" data-sub="setting">⚙️ Setting</button>
     </div>
@@ -704,8 +943,12 @@
 
 <script>
 /* =========================================================
-   KONFIGURASI — GANTI TOKEN DI SINI
+   KONFIGURASI
+   Akses admin lewat URL: https://situs-anda.com/#admin
    ========================================================= */
+const ADMIN_HASH = '#admin';
+const DEFAULT_MAPS_URL = 'https://maps.app.goo.gl/nPcgtixXSMi6xT1ZA';
+
 const DEFAULT_WA = {
   provider: 'fonnte',
   fonnteToken: 'PASTE_TOKEN_FONNTE_DISINI',
@@ -714,9 +957,6 @@ const DEFAULT_WA = {
   template: ''
 };
 
-/* =========================================================
-   MENU
-   ========================================================= */
 const MENU = [
   { id:'bakmie',    name:'Bakmie Jowo',    price:15000, var:true, emoji:'🍜' },
   { id:'godog',     name:'Mie Godog',      price:15000, var:true, emoji:'🍲' },
@@ -730,8 +970,11 @@ const MENU = [
   { id:'nasi',      name:'Nasi',           price:5000,  var:false, emoji:'🍙' }
 ];
 const VARIANTS = ['Ori','Sedang','Pedes'];
-const STORE_ORDERS = 'kedei_dlesep_orders_v4';
-const STORE_WA     = 'kedei_dlesep_wa_config_v4';
+const STORE_ORDERS = 'kedei_dlesep_orders_v8';
+const STORE_WA     = 'kedei_dlesep_wa_config_v8';
+const STORE_STOCK  = 'kedei_dlesep_stock_v8';
+const STORE_SETTINGS = 'kedei_dlesep_settings_v8';
+const STORE_MAPS   = 'kedei_dlesep_maps_v8';
 
 const DEFAULT_TEMPLATE =
 `🍽️ *PESANAN ANDA SUDAH SIAP*
@@ -744,16 +987,20 @@ Halo *{nama}*, pesanan Anda dengan kode *#{kode}* sudah selesai dan siap disajik
 *Total: {total}*
 {meja}{catatan}
 
+⭐ *Bantu kami dengan review di Google Maps:*
+{maps}
+
 Terima kasih sudah memesan di *KeDei D'Lesep* 🙏
 Selamat menikmati! 🍜`;
 
 /* =========================================================
-   STATE + UTIL
+   STATE
    ========================================================= */
 let cart = {};
 let orders = loadOrders();
 let adminSub = 'antrian';
 let sheetCtx = null;
+let isAdminMode = false;
 
 const fmtRp = n => 'Rp ' + (n||0).toLocaleString('id-ID');
 const esc = s => String(s == null ? '' : s)
@@ -784,6 +1031,67 @@ function loadWACfg(){
 }
 function saveWACfg(cfg){ localStorage.setItem(STORE_WA, JSON.stringify(cfg)); }
 
+function loadStock(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_STOCK) || '{}');
+    MENU.forEach(m => {
+      if(saved[m.id] === undefined) saved[m.id] = 50;
+    });
+    return saved;
+  } catch(e){
+    const stock = {};
+    MENU.forEach(m => stock[m.id] = 50);
+    return stock;
+  }
+}
+function saveStock(stock){ localStorage.setItem(STORE_STOCK, JSON.stringify(stock)); }
+
+/* STOK REALTIME: efektif = dasar − pesanan aktif */
+function getActiveReserved(menuId){
+  let reserved = 0;
+  orders.forEach(order => {
+    if(order.done) return;
+    order.items.forEach(it => {
+      if(it.menuId === menuId) reserved += it.qty;
+    });
+  });
+  return reserved;
+}
+function getStock(menuId){
+  const baseStock = loadStock();
+  const base = baseStock[menuId] !== undefined ? baseStock[menuId] : 0;
+  return Math.max(0, base - getActiveReserved(menuId));
+}
+function getPermanentlySold(menuId){
+  let sold = 0;
+  orders.forEach(order => {
+    if(!order.done) return;
+    order.items.forEach(it => {
+      if(it.menuId === menuId) sold += it.qty;
+    });
+  });
+  return sold;
+}
+
+function loadSettings(){
+  try {
+    return Object.assign({ dineInEnabled: true },
+      JSON.parse(localStorage.getItem(STORE_SETTINGS) || '{}'));
+  } catch(e){
+    return { dineInEnabled: true };
+  }
+}
+function saveSettings(settings){
+  localStorage.setItem(STORE_SETTINGS, JSON.stringify(settings));
+}
+
+function getMapsUrl(){
+  return localStorage.getItem(STORE_MAPS) || DEFAULT_MAPS_URL;
+}
+function setMapsUrl(url){
+  localStorage.setItem(STORE_MAPS, url);
+}
+
 function normalizePhone(p){
   let d = String(p||'').replace(/\D/g,'');
   if(!d) return '';
@@ -805,38 +1113,95 @@ function shortTime(ts){
   return new Date(ts).toLocaleDateString('id-ID',{day:'2-digit',month:'short'});
 }
 
+function getActiveQueue(){
+  return orders.filter(o => !o.done)
+    .sort((a,b) => a.createdAt - b.createdAt);
+}
+function getQueuePosition(orderId){
+  const q = getActiveQueue();
+  const idx = q.findIndex(o => o.id === orderId);
+  return idx >= 0 ? { pos: idx + 1, total: q.length } : null;
+}
+
 /* =========================================================
-   VIEW SWITCH
+   ADMIN VIA HASH URL
    ========================================================= */
-document.querySelectorAll('.tab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('view-' + btn.dataset.view).classList.add('active');
-    document.getElementById('cartFloat').classList.toggle(
-      'show', btn.dataset.view === 'order' && getCartCount() > 0
-    );
-    if(btn.dataset.view === 'admin') renderAdmin();
-    window.scrollTo({top:0,behavior:'smooth'});
+function setupAdminTab(){
+  const nav = document.getElementById('mainNav');
+  const existingAdminTab = nav.querySelector('[data-view="admin"]');
+  const hash = (window.location.hash || '').toLowerCase();
+
+  if(hash === ADMIN_HASH){
+    isAdminMode = true;
+    if(!existingAdminTab){
+      const btn = document.createElement('button');
+      btn.className = 'tab';
+      btn.dataset.view = 'admin';
+      btn.innerHTML = 'Admin <span class="pill hide" id="pendingPill">0</span>';
+      nav.appendChild(btn);
+      btn.addEventListener('click', ()=> switchView('admin'));
+    }
+  } else {
+    isAdminMode = false;
+    if(existingAdminTab){
+      existingAdminTab.remove();
+      if(document.getElementById('view-admin').classList.contains('active')){
+        switchView('order');
+      }
+    }
+  }
+}
+
+function switchView(name){
+  document.querySelectorAll('.tab').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view === name);
   });
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const v = document.getElementById('view-' + name);
+  if(v) v.classList.add('active');
+
+  document.getElementById('cartFloat').classList.toggle(
+    'show', name === 'order' && getCartCount() > 0 && !isFormVisible()
+  );
+
+  if(name === 'admin' && isAdminMode) renderAdmin();
+  if(name === 'status') renderStatusLive();
+  if(name === 'order')  renderMenu();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', ()=> switchView(btn.dataset.view));
+});
+
+window.addEventListener('hashchange', ()=>{
+  setupAdminTab();
+  if(!isAdminMode && document.getElementById('view-admin').classList.contains('active')){
+    switchView('order');
+  }
 });
 
 /* =========================================================
    MENU
    ========================================================= */
 function renderMenu(){
-  document.getElementById('menuGrid').innerHTML = MENU.map(m => `
-    <div class="card" data-menu="${m.id}">
-      ${m.tag ? `<span class="card-tag">${m.tag}</span>` : ''}
+  document.getElementById('menuGrid').innerHTML = MENU.map(m => {
+    const s = getStock(m.id);
+    let stockClass = 'available', stockText = `Sisa: ${s}`;
+    if(s === 0){ stockClass = 'out'; stockText = 'Habis'; }
+    else if(s <= 5){ stockClass = 'low'; stockText = `Sisa ${s}`; }
+
+    return `
+    <div class="card ${s === 0 ? 'disabled' : ''}" data-menu="${m.id}">
+      <span class="card-stock ${stockClass}">${stockText}</span>
       <div class="card-emoji">${m.emoji}</div>
       <div class="card-name">${esc(m.name)}</div>
       <div class="card-price">${fmtRp(m.price)}</div>
       <button class="card-add" data-add="${m.id}">
         ${m.var ? 'Pilih' : '＋ Tambah'}
       </button>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
   document.querySelectorAll('[data-add]').forEach(b=>{
     b.addEventListener('click', (e)=>{
       e.stopPropagation();
@@ -855,11 +1220,16 @@ function openSheet(menuId){
   const m = MENU.find(x=>x.id === menuId);
   if(!m) return;
 
+  const stock = getStock(menuId);
+  if(stock <= 0){ toast('Stok habis', 'err'); return; }
+
+  const settings = loadSettings();
   sheetCtx = {
     menuId,
     variant: m.var ? 'Ori' : '',
-    bungkus: 0,
-    qty: 1
+    bungkus: settings.dineInEnabled ? 0 : 1,
+    qty: 1,
+    maxQty: Math.min(20, stock)
   };
 
   document.getElementById('sheetEmoji').textContent = m.emoji;
@@ -884,13 +1254,21 @@ function openSheet(menuId){
     varBox.style.display = 'none';
   }
 
-  document.getElementById('sheetOpsi').querySelectorAll('button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.bungkus === '0');
+  const opsiBtns = document.getElementById('sheetOpsi').querySelectorAll('button');
+  opsiBtns.forEach(b=>{
+    const isDine = b.dataset.bungkus === '0';
+    if(isDine && !settings.dineInEnabled){
+      b.disabled = true; b.classList.remove('active');
+    } else b.disabled = false;
     b.onclick = ()=>{
+      if(b.disabled) return;
       sheetCtx.bungkus = parseInt(b.dataset.bungkus);
-      document.getElementById('sheetOpsi').querySelectorAll('button')
-        .forEach(x => x.classList.toggle('active', x === b));
+      opsiBtns.forEach(x => x.classList.toggle('active', x === b));
     };
+  });
+  opsiBtns.forEach(b=>{
+    const val = parseInt(b.dataset.bungkus);
+    b.classList.toggle('active', val === sheetCtx.bungkus && !b.disabled);
   });
 
   document.getElementById('sheetBg').classList.add('show');
@@ -912,7 +1290,7 @@ document.getElementById('sheetMinus').addEventListener('click', ()=>{
 });
 document.getElementById('sheetPlus').addEventListener('click', ()=>{
   if(!sheetCtx) return;
-  sheetCtx.qty = Math.min(20, sheetCtx.qty + 1);
+  sheetCtx.qty = Math.min(sheetCtx.maxQty, sheetCtx.qty + 1);
   document.getElementById('sheetQty').textContent = sheetCtx.qty;
 });
 document.getElementById('sheetAdd').addEventListener('click', ()=>{
@@ -921,9 +1299,8 @@ document.getElementById('sheetAdd').addEventListener('click', ()=>{
   if(!m) return closeSheet();
 
   const key = m.id + '|' + sheetCtx.variant + '|' + sheetCtx.bungkus;
-  if(cart[key]){
-    cart[key].qty += sheetCtx.qty;
-  } else {
+  if(cart[key]) cart[key].qty += sheetCtx.qty;
+  else {
     cart[key] = {
       menuId: m.id, name: m.name, emoji: m.emoji,
       price: m.price, variant: sheetCtx.variant,
@@ -947,6 +1324,13 @@ function changeQty(key, delta){
 const getCartTotal = () => Object.values(cart).reduce((s,i)=> s + i.price*i.qty, 0);
 const getCartCount = () => Object.values(cart).reduce((s,i)=> s + i.qty, 0);
 
+function isFormVisible(){
+  const panel = document.getElementById('formPanel');
+  if(!panel) return false;
+  const rect = panel.getBoundingClientRect();
+  return rect.top < window.innerHeight - 80;
+}
+
 function renderCart(){
   const keys = Object.keys(cart);
   const cartPanel = document.getElementById('cartPanel');
@@ -955,12 +1339,16 @@ function renderCart(){
   if(!keys.length){
     cartPanel.style.display = 'none';
     cartFloat.classList.remove('show');
+    cartFloat.classList.remove('hide-for-form');
     return;
   }
 
   cartPanel.style.display = '';
-  cartFloat.classList.toggle('show',
-    document.getElementById('view-order').classList.contains('active'));
+
+  const onOrderView = document.getElementById('view-order').classList.contains('active');
+  const formVisible = isFormVisible();
+  cartFloat.classList.toggle('show', onOrderView && !formVisible);
+  cartFloat.classList.toggle('hide-for-form', onOrderView && formVisible);
 
   const box = document.getElementById('cartItems');
   box.innerHTML = keys.map(k=>{
@@ -995,6 +1383,20 @@ function renderCart(){
   validateForm();
 }
 
+let scrollBound = false;
+function bindScrollWatch(){
+  if(scrollBound) return;
+  scrollBound = true;
+  window.addEventListener('scroll', ()=>{
+    const cartFloat = document.getElementById('cartFloat');
+    if(!Object.keys(cart).length) return;
+    if(!document.getElementById('view-order').classList.contains('active')) return;
+    const formVisible = isFormVisible();
+    cartFloat.classList.toggle('hide-for-form', formVisible);
+    cartFloat.classList.toggle('show', !formVisible);
+  }, { passive:true });
+}
+
 function validateForm(){
   const name = document.getElementById('fName').value.trim();
   const phone = document.getElementById('fPhone').value.trim();
@@ -1007,7 +1409,6 @@ function validateForm(){
   if(phoneOk) p += 50;
   document.getElementById('formProgress').style.width = p + '%';
 }
-
 ['fName','fPhone'].forEach(id=>{
   document.getElementById(id).addEventListener('input', validateForm);
 });
@@ -1025,14 +1426,19 @@ function submitOrder(){
   if(phone.replace(/\D/g,'').length < 9) return toast('Nomor WhatsApp tidak valid','err');
   if(!getCartCount()) return toast('Pilih menu dulu ya','err');
 
+  for(const it of Object.values(cart)){
+    if(it.qty > getStock(it.menuId)){
+      return toast(`Stok ${it.name} tidak cukup, sisa ${getStock(it.menuId)}`, 'err');
+    }
+  }
+
   const items = Object.values(cart).map(i=>({
-    name: i.name, emoji: i.emoji,
+    name: i.name, emoji: i.emoji, menuId: i.menuId,
     variant: i.variant, bungkus: !!i.bungkus,
     price: i.price, qty: i.qty, done: false
   }));
 
   const id = 'D' + String(Date.now()).slice(-6);
-
   const order = {
     id, name, phone, table, note, items,
     total: getCartTotal(),
@@ -1047,26 +1453,204 @@ function submitOrder(){
   cart = {};
   ['fName','fPhone','fTable','fNote'].forEach(x => document.getElementById(x).value = '');
   renderCart();
+  renderMenu();
   updatePill();
+
+  const queueInfo = getQueuePosition(id);
+  const queueLine = queueInfo
+    ? `<div style="margin-top:14px;padding:12px 16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;border-radius:12px;font-weight:800;font-size:13.5px">
+         🎫 Nomor antrian Anda: <b style="font-size:18px">#${queueInfo.pos}</b> dari ${queueInfo.total}
+       </div>`
+    : '';
 
   document.getElementById('view-order').innerHTML = `
     <div class="success">
       <div class="ico">🎉</div>
       <h3>Pesanan Terkirim!</h3>
-      <p>Pesanan Anda sedang disiapkan oleh dapur.<br>Simpan kode pesanan Anda:</p>
+      <p>Pesanan Anda sedang disiapkan oleh dapur.<br>Pantau antrian &amp; progres di tab <b>Status</b>.</p>
       <div class="code">#${esc(id)}</div>
-      <p>Notifikasi WhatsApp akan dikirim otomatis<br>setelah pesanan selesai disajikan.</p>
-      <button class="btn-primary" style="max-width:280px;margin:22px auto 0"
-        onclick="location.reload()">Pesan Lagi</button>
+      ${queueLine}
+      <p style="margin-top:16px">Notifikasi WhatsApp akan dikirim otomatis<br>setelah pesanan selesai disajikan.</p>
+
+      <div style="margin-top:24px">
+        <a class="btn-maps" href="${getMapsUrl()}" target="_blank" rel="noopener">
+          <span class="stars">⭐⭐⭐⭐⭐</span>
+          Review Rasa di Google Maps
+        </a>
+      </div>
+
+      <div style="display:flex; gap:10px; max-width:320px; margin:16px auto 0">
+        <button class="btn-ghost" style="flex:1" id="reloadBtn">Pesan Lagi</button>
+        <button class="btn-primary" style="flex:1; margin-top:0" id="gotoStatus">Lihat Status</button>
+      </div>
     </div>`;
-  document.getElementById('cartFloat').classList.remove('show');
+
+  setTimeout(()=>{
+    document.getElementById('reloadBtn').addEventListener('click', ()=>location.reload());
+    document.getElementById('gotoStatus').addEventListener('click', ()=> switchView('status'));
+  }, 0);
 }
 
 document.getElementById('btnOrder').addEventListener('click', submitOrder);
 document.getElementById('cfBtn').addEventListener('click', ()=>{
-  document.getElementById('fName').scrollIntoView({behavior:'smooth', block:'center'});
-  setTimeout(()=> document.getElementById('fName').focus(), 400);
+  const cartFloat = document.getElementById('cartFloat');
+  cartFloat.classList.add('hide-for-form');
+  cartFloat.classList.remove('show');
+  document.getElementById('formPanel').scrollIntoView({behavior:'smooth', block:'start'});
+  setTimeout(()=> document.getElementById('fName').focus(), 500);
 });
+
+/* =========================================================
+   STATUS REALTIME
+   ========================================================= */
+function renderStatusLive(){
+  const box = document.getElementById('statusLive');
+  if(!box) return;
+
+  const active = getActiveQueue();
+  const recentlyDone = orders.filter(o => o.done)
+    .sort((a,b) => b.createdAt - a.createdAt).slice(0, 5);
+
+  const activeCount = active.length;
+  const statusPill = document.getElementById('statusPill');
+  if(statusPill){
+    statusPill.textContent = activeCount;
+    statusPill.classList.toggle('hide', activeCount === 0);
+  }
+
+  if(!orders.length){
+    box.innerHTML = `
+      <div class="rt-empty">
+        <span class="ico">🍽️</span>
+        <b>Belum ada pesanan</b>
+        <p>Pesanan yang masuk akan muncul di sini secara otomatis.</p>
+      </div>`;
+    return;
+  }
+
+  const activeHtml = active.length
+    ? active.map((o, idx) => renderStatusCard(o, true, idx + 1, active.length)).join('')
+    : `<div class="rt-empty" style="padding:28px 20px">
+         <span class="ico" style="font-size:38px">✨</span>
+         <b style="font-size:14px">Tidak ada antrian aktif</b>
+         <p style="font-size:12px">Semua pesanan sudah selesai diproses.</p>
+       </div>`;
+
+  const doneHtml = recentlyDone.length
+    ? recentlyDone.map(o => renderStatusCard(o, false)).join('')
+    : '';
+
+  box.innerHTML = `
+    <div class="rt-section-title">
+      🔥 Sedang Diproses <span class="count-badge">${active.length}</span>
+    </div>
+    ${activeHtml}
+    ${doneHtml ? `
+      <div class="rt-section-title" style="margin-top:26px">
+        ✅ Baru Selesai <span class="count-badge">${recentlyDone.length}</span>
+      </div>
+      ${doneHtml}
+    ` : ''}
+
+    <div class="rt-section-title" style="margin-top:26px">
+      ⭐ Review Rasa
+    </div>
+    <div class="rt-card done">
+      <div style="font-size:13px;line-height:1.6;color:var(--muted);font-weight:600;margin-bottom:12px">
+        Sudah mencoba masakan kami? Bantu kami berkembang dengan review jujur Anda di Google Maps 🙏
+      </div>
+      <a class="btn-maps" href="${getMapsUrl()}" target="_blank" rel="noopener">
+        <span class="stars">⭐⭐⭐⭐⭐</span>
+        Beri Review di Google Maps
+      </a>
+    </div>
+  `;
+}
+
+function renderStatusCard(o, isActive, queuePos, queueTotal){
+  const doneCount = o.items.filter(it => it.done).length;
+  const totalCount = o.items.length;
+  const progress = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+  let badgeClass = 'wait', badgeText = '🕐 MENUNGGU';
+  if(o.done){ badgeClass = 'done'; badgeText = '✓ SELESAI'; }
+  else if(doneCount > 0){ badgeClass = 'process'; badgeText = '🍳 DIMASAK'; }
+
+  const queueBadge = isActive && queuePos
+    ? `<div class="rt-queue-badge">
+         🎫 Antrian #${queuePos} <small>dari ${queueTotal}</small>
+       </div>`
+    : '';
+
+  const itemsHtml = o.items.map(it => {
+    const bits = [];
+    if(it.variant) bits.push(it.variant);
+    bits.push(it.bungkus ? 'Bungkus' : 'Dine-in');
+    return `
+      <div class="rt-item ${it.done ? 'done' : ''}">
+        <div class="dot">${it.done ? '✓' : ''}</div>
+        <div class="txt">
+          ${it.emoji || ''} ${esc(it.name)}
+          <small>${bits.join(' · ')}</small>
+        </div>
+        <div class="qty-tag">×${it.qty}</div>
+      </div>`;
+  }).join('');
+
+  const mapsCta = o.done
+    ? `<div class="rt-maps-cta">
+         <a href="${getMapsUrl()}" target="_blank" rel="noopener">
+           ⭐ Review Rasa di Google Maps
+         </a>
+       </div>`
+    : '';
+
+  return `
+    <div class="rt-card ${isActive ? 'active' : 'done'}" data-order-id="${esc(o.id)}">
+      <div class="rt-card-head">
+        <div>
+          ${queueBadge}
+          <div class="rt-card-name">${esc(o.name)}</div>
+          <div class="rt-card-meta">
+            #${esc(o.id)}${o.table ? ` · 🪑 Meja ${esc(o.table)}` : ''} · ${shortTime(o.createdAt)}
+          </div>
+        </div>
+        <span class="rt-badge ${badgeClass}">${badgeText}</span>
+      </div>
+
+      <div class="rt-progress">
+        <span>Progres masak</span>
+        <span>${doneCount}/${totalCount} item · ${progress}%</span>
+      </div>
+      <div class="bar"><div style="width:${progress}%"></div></div>
+
+      <div class="rt-items">${itemsHtml}</div>
+      ${mapsCta}
+    </div>`;
+}
+
+let realtimeTimer = null;
+function startRealtime(){
+  if(realtimeTimer) return;
+  realtimeTimer = setInterval(()=>{
+    const fresh = loadOrders();
+    let changed = false;
+    if(JSON.stringify(fresh) !== JSON.stringify(orders)){
+      orders = fresh;
+      changed = true;
+      updatePill();
+    }
+    if(document.getElementById('view-status').classList.contains('active')){
+      renderStatusLive();
+    }
+    if(document.getElementById('view-order').classList.contains('active') && changed){
+      renderMenu();
+    }
+    if(isAdminMode && document.getElementById('view-admin').classList.contains('active') && changed){
+      renderAdmin();
+    }
+  }, 2000);
+}
 
 /* =========================================================
    ADMIN
@@ -1081,19 +1665,21 @@ document.querySelectorAll('.subtab').forEach(b=>{
 });
 
 function renderAdmin(){
+  if(!isAdminMode) return;
   updatePill();
   document.getElementById('tabAntrianCount').textContent =
     orders.filter(o=>!o.done).length;
   const box = document.getElementById('subContent');
   if(adminSub === 'antrian')      box.innerHTML = renderAntrianView();
   else if(adminSub === 'dapur')   box.innerHTML = renderDapurView();
+  else if(adminSub === 'stock')   box.innerHTML = renderStockView();
   else if(adminSub === 'riwayat') box.innerHTML = renderRiwayatView();
   else                            box.innerHTML = renderSettingView();
   bindAdminEvents();
 }
 
 function renderAntrianView(){
-  const queue = orders.filter(o => !o.done).sort((a,b) => a.createdAt - b.createdAt);
+  const queue = getActiveQueue();
   if(!queue.length){
     return `<div class="panel"><div class="empty"><span class="ico">✨</span>Tidak ada antrian.<br>Semua pesanan sudah selesai.</div></div>`;
   }
@@ -1135,7 +1721,7 @@ function renderOrderCard(o, queueNumber){
         <div>
           <div>
             <span class="o-id">#${esc(o.id)}</span>
-            <span class="o-queue">QUEUE ${queueNumber}</span>
+            <span class="o-queue">ANTRIAN ${queueNumber}</span>
           </div>
           <div class="o-name">${esc(o.name)}</div>
           <div class="o-meta">
@@ -1165,6 +1751,7 @@ function renderOrderCard(o, queueNumber){
 function getKitchenSummary(){
   const agg = {};
   let wrapCount = 0, dineCount = 0;
+
   orders.filter(o => !o.done).forEach(order => {
     order.items.filter(it => !it.done).forEach(it => {
       const key = it.name + '|' + (it.variant || '') + '|' + (it.bungkus ? 'wrap' : 'dine');
@@ -1172,15 +1759,17 @@ function getKitchenSummary(){
         agg[key] = {
           name: it.name, emoji: it.emoji,
           variant: it.variant, bungkus: !!it.bungkus,
-          qty: 0, orders: new Set()
+          qty: 0, orders: new Set(), orderIds: []
         };
       }
       agg[key].qty += it.qty;
       agg[key].orders.add(order.id);
+      agg[key].orderIds.push({ id: order.id, name: order.name, qty: it.qty });
       if(it.bungkus) wrapCount += it.qty;
       else dineCount += it.qty;
     });
   });
+
   return {
     items: Object.values(agg)
       .map(x => ({...x, orderCount: x.orders.size}))
@@ -1208,18 +1797,24 @@ function renderDapurView(){
       <div class="panel"><div class="empty"><span class="ico">🍳</span>Belum ada item untuk dimasak.</div></div>`;
   }
 
-  const listHtml = summary.map(s => {
+  const listHtml = summary.map((s, idx) => {
     const tags = [];
     if(s.variant) tags.push(`<span class="kitchen-tag">${esc(s.variant)}</span>`);
     if(s.bungkus) tags.push('<span class="kitchen-tag wrap">🥡 Bungkus</span>');
     else          tags.push('<span class="kitchen-tag dine">🍽️ Dine-in</span>');
+
+    const customerDetails = s.orderIds.map(od =>
+      `#${od.id} (${od.name}) ×${od.qty}`
+    ).join(' · ');
+
     return `
-      <div class="kitchen-item">
+      <div class="kitchen-item" data-kitchen-idx="${idx}">
+        <input type="checkbox" class="chk-kitchen" data-key="${esc(s.name)}|${esc(s.variant||'')}|${s.bungkus?'1':'0'}">
         <div class="kitchen-qty">${s.qty}×</div>
         <div class="kitchen-info">
           <div class="kitchen-name">${s.emoji||''} ${esc(s.name)}</div>
           <div class="kitchen-tags">${tags.join('')}</div>
-          <div class="kitchen-meta">${s.orderCount} pesanan menunggu</div>
+          <div class="kitchen-meta">${s.orderCount} pelanggan: ${customerDetails}</div>
         </div>
       </div>`;
   }).join('');
@@ -1234,10 +1829,57 @@ function renderDapurView(){
         <b>🍽️ Dine-in: ${dineCount}</b>
       </div>
     </div>
+    <div style="font-size:12px;font-weight:800;color:var(--muted);margin-bottom:10px;letter-spacing:.5px">
+      ☑️ Centang item yang sudah selesai dimasak (otomatis update status pelanggan)
+    </div>
     <div class="kitchen-list">${listHtml}</div>
     <div style="margin-top:16px; text-align:right">
       <button class="btn-ghost" id="btnPrintKitchen">🖨️ Cetak Daftar</button>
     </div>`;
+}
+
+function renderStockView(){
+  const baseStock = loadStock();
+
+  const listHtml = MENU.map(m => {
+    const base = baseStock[m.id] || 0;
+    const reserved = getActiveReserved(m.id);
+    const sold = getPermanentlySold(m.id);
+    const effective = Math.max(0, base - reserved);
+    return `
+      <div class="stock-item">
+        <div class="stock-info">
+          <div class="stock-name">${m.emoji} ${esc(m.name)}</div>
+          <div class="stock-detail">
+            Stok dasar: <b>${base}</b> · Efektif: <b>${effective}</b><br>
+            Dipesan aktif: ${reserved} · Terjual: ${sold}
+          </div>
+        </div>
+        <div class="stock-control">
+          <button data-stock-minus="${m.id}">−</button>
+          <input type="number" data-stock-input="${m.id}" value="${base}" min="0">
+          <button data-stock-plus="${m.id}">+</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  const totalBase = Object.values(baseStock).reduce((a,b)=>a+b,0);
+  const totalReserved = MENU.reduce((a,m)=> a + getActiveReserved(m.id), 0);
+  const totalEffective = MENU.reduce((a,m)=> a + Math.max(0, (baseStock[m.id]||0) - getActiveReserved(m.id)), 0);
+
+  return `
+    <div class="panel">
+      <h3>📦 Manajemen Stok</h3>
+      <div style="font-size:12.5px;color:var(--muted);margin-bottom:16px;font-weight:600;line-height:1.7">
+        <b style="color:var(--primary-dark)">Stok dasar</b> = total porsi yang Anda siapkan.<br>
+        <b style="color:var(--primary-dark)">Stok efektif</b> = stok dasar − pesanan aktif.<br>
+        Saat pesanan selesai, stok efektif otomatis bertambah kembali.<br><br>
+        Total dasar: <b>${totalBase}</b> · Dipesan aktif: <b>${totalReserved}</b> · Efektif tersedia: <b>${totalEffective}</b>
+      </div>
+      ${listHtml}
+      <button class="btn-primary" id="btnSaveStock" style="margin-top:16px">💾 Simpan Stok Dasar</button>
+    </div>
+  `;
 }
 
 function renderRiwayatView(){
@@ -1280,13 +1922,45 @@ function renderRiwayatView(){
 
 function renderSettingView(){
   const cfg = loadWACfg();
+  const settings = loadSettings();
   const tokenDisplay = cfg.fonnteToken && cfg.fonnteToken !== 'PASTE_TOKEN_FONNTE_DISINI'
     ? cfg.fonnteToken : '';
   return `
     <div class="settings-note">
+      <b>ℹ️ Akses Admin</b><br>
+      Halaman ini hanya muncul kalau URL mengandung <b>${ADMIN_HASH}</b>.<br>
+      Bagikan URL tanpa hash ke pelanggan: <b>${location.origin + location.pathname}</b>
+    </div>
+
+    <div class="settings-note">
       <b>ℹ️ Status</b><br>
       Provider: <b>${esc(cfg.provider)}</b><br>
       Token Fonnte: <b>${tokenDisplay ? '✓ sudah diisi' : '✗ belum diisi'}</b>
+    </div>
+
+    <div class="panel">
+      <h3>🍽️ Pengaturan Layanan</h3>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-title">Makan di Tempat (Dine-in)</div>
+          <div class="toggle-desc">Aktifkan agar pelanggan bisa memilih makan di tempat</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggleDineIn" ${settings.dineInEnabled ? 'checked' : ''}>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>⭐ Link Review Google Maps</h3>
+      <div class="setting-row">
+        <input id="cfgMaps" type="text" value="${esc(getMapsUrl())}">
+        <div class="setting-help">
+          Link ini dipakai di halaman sukses, template WhatsApp, dan tab Status.
+        </div>
+        <button class="btn-ghost" id="btnSaveMaps" style="margin-top:10px">💾 Simpan Link</button>
+      </div>
     </div>
 
     <div class="panel">
@@ -1343,15 +2017,16 @@ function renderSettingView(){
     <div class="panel">
       <h3>💬 Template Pesan</h3>
       <div class="setting-help" style="margin-bottom:10px">
-        Placeholder: <b>{nama}</b> <b>{kode}</b> <b>{items}</b> <b>{total}</b> <b>{meja}</b> <b>{catatan}</b>
+        Placeholder: <b>{nama}</b> <b>{kode}</b> <b>{items}</b> <b>{total}</b> <b>{meja}</b> <b>{catatan}</b> <b>{maps}</b>
       </div>
-      <textarea id="cfgTemplate" rows="8">${esc(cfg.template || DEFAULT_TEMPLATE)}</textarea>
+      <textarea id="cfgTemplate" rows="10">${esc(cfg.template || DEFAULT_TEMPLATE)}</textarea>
     </div>
   `;
 }
 
 function bindAdminEvents(){
   const box = document.getElementById('subContent');
+
   box.querySelectorAll('.chk-item').forEach(chk=>{
     chk.addEventListener('change', ()=>{
       toggleItem(chk.dataset.order, parseInt(chk.dataset.idx), chk.checked);
@@ -1370,6 +2045,7 @@ function bindAdminEvents(){
       orders = orders.filter(x=> x.id !== o.id);
       saveOrders();
       renderAdmin();
+      renderMenu();
     });
   });
   box.querySelectorAll('[data-retry]').forEach(a=>{
@@ -1383,6 +2059,47 @@ function bindAdminEvents(){
       renderAdmin();
     });
   });
+
+  box.querySelectorAll('.chk-kitchen').forEach(chk=>{
+    chk.addEventListener('change', ()=>{
+      const parts = chk.dataset.key.split('|');
+      const [name, variant, isWrap] = parts;
+      markKitchenItemDone(name, variant, isWrap === '1', chk.checked);
+    });
+  });
+
+  const btnPrint = document.getElementById('btnPrintKitchen');
+  if(btnPrint) btnPrint.addEventListener('click', printKitchen);
+
+  box.querySelectorAll('[data-stock-minus]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.dataset.stockMinus;
+      const input = box.querySelector(`[data-stock-input="${id}"]`);
+      input.value = Math.max(0, parseInt(input.value) - 1);
+    });
+  });
+  box.querySelectorAll('[data-stock-plus]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.dataset.stockPlus;
+      const input = box.querySelector(`[data-stock-input="${id}"]`);
+      input.value = parseInt(input.value) + 1;
+    });
+  });
+
+  const btnSaveStock = document.getElementById('btnSaveStock');
+  if(btnSaveStock){
+    btnSaveStock.addEventListener('click', ()=>{
+      const stock = loadStock();
+      box.querySelectorAll('[data-stock-input]').forEach(input=>{
+        stock[input.dataset.stockInput] = Math.max(0, parseInt(input.value) || 0);
+      });
+      saveStock(stock);
+      renderMenu();
+      renderAdmin();
+      toast('✓ Stok dasar disimpan', 'ok');
+    });
+  }
+
   const btnClearDone = document.getElementById('btnClearDone');
   if(btnClearDone){
     btnClearDone.addEventListener('click', ()=>{
@@ -1390,11 +2107,31 @@ function bindAdminEvents(){
       orders = orders.filter(o => !o.done);
       saveOrders();
       renderAdmin();
+      renderMenu();
       toast('Riwayat dibersihkan','ok');
     });
   }
-  const btnPrint = document.getElementById('btnPrintKitchen');
-  if(btnPrint) btnPrint.addEventListener('click', printKitchen);
+
+  const toggleDineIn = document.getElementById('toggleDineIn');
+  if(toggleDineIn){
+    toggleDineIn.addEventListener('change', ()=>{
+      const settings = loadSettings();
+      settings.dineInEnabled = toggleDineIn.checked;
+      saveSettings(settings);
+      toast(settings.dineInEnabled ? '✓ Dine-in diaktifkan' : '✓ Dine-in dinonaktifkan', 'ok');
+    });
+  }
+
+  const btnSaveMaps = document.getElementById('btnSaveMaps');
+  if(btnSaveMaps){
+    btnSaveMaps.addEventListener('click', ()=>{
+      const val = (document.getElementById('cfgMaps').value || '').trim();
+      if(!val) return toast('Link tidak boleh kosong','err');
+      setMapsUrl(val);
+      document.querySelectorAll('[data-maps-link]').forEach(a => a.href = val);
+      toast('✓ Link Maps disimpan','ok');
+    });
+  }
 
   box.querySelectorAll('input[name="waProvider"]').forEach(r=>{
     r.addEventListener('change', ()=>{
@@ -1464,6 +2201,7 @@ function toggleItem(orderId, idx, checked){
   saveOrders();
   if(allDone && !o.waSent) attemptSendWA(o);
   renderAdmin();
+  renderMenu();
 }
 function toggleAll(orderId, checked){
   const o = orders.find(x=>x.id === orderId);
@@ -1473,6 +2211,35 @@ function toggleAll(orderId, checked){
   saveOrders();
   if(checked && !o.waSent) attemptSendWA(o);
   renderAdmin();
+  renderMenu();
+}
+function markKitchenItemDone(name, variant, isWrap, done){
+  let anyChanged = false;
+  orders.filter(o => !o.done).forEach(order => {
+    let orderChanged = false;
+    order.items.forEach(it => {
+      const itVariant = it.variant || '';
+      const itWrap = it.bungkus ? '1' : '0';
+      const matchVariant = itVariant === variant;
+      const matchWrap = itWrap === (isWrap ? '1' : '0');
+      if(it.name === name && matchVariant && matchWrap && !it.done){
+        it.done = done;
+        orderChanged = true;
+        anyChanged = true;
+      }
+    });
+    if(orderChanged){
+      const allDone = order.items.every(it => it.done);
+      order.done = allDone;
+      if(allDone && !order.waSent) attemptSendWA(order);
+    }
+  });
+  if(anyChanged){
+    saveOrders();
+    if(done) toast(`✓ ${name} (${variant}${isWrap?' · Bungkus':''}) selesai dimasak`, 'ok');
+    renderAdmin();
+    renderMenu();
+  }
 }
 
 /* =========================================================
@@ -1494,7 +2261,8 @@ function buildMessage(order){
     .replace(/{items}/g, itemsText)
     .replace(/{total}/g, fmtRp(order.total))
     .replace(/{meja}/g, order.table ? `Meja: ${order.table}\n` : '')
-    .replace(/{catatan}/g, order.note ? `Catatan: ${order.note}\n` : '');
+    .replace(/{catatan}/g, order.note ? `Catatan: ${order.note}\n` : '')
+    .replace(/{maps}/g, getMapsUrl());
 }
 
 async function sendWA(order, cfgOverride){
@@ -1590,15 +2358,19 @@ function printKitchen(){
     const bits = [];
     if(s.variant) bits.push(s.variant);
     bits.push(s.bungkus ? 'Dibungkus' : 'Dine-in');
+    const custs = s.orderIds.map(od => `#${od.id}(${od.name})×${od.qty}`).join(', ');
     return `<tr>
-      <td>${esc(s.name)} <b>(${bits.join(' · ')})</b></td>
+      <td>
+        ${esc(s.name)} <b>(${bits.join(' · ')})</b><br>
+        <small style="color:#666">${s.orderCount} pelanggan: ${custs}</small>
+      </td>
       <td style="text-align:center;font-weight:900;font-size:16px">${s.qty}</td>
     </tr>`;
   }).join('');
   win.document.write(`
     <html><head><title>Daftar Masak — KeDei D'Lesep</title>
     <style>
-      body{font-family:Arial,sans-serif;padding:24px;max-width:560px}
+      body{font-family:Arial,sans-serif;padding:24px;max-width:600px}
       h1{font-size:20px;margin-bottom:4px}
       .meta{color:#666;font-size:12px;margin-bottom:16px}
       .stats{background:#f0fdf9;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:13px;border:1px solid #a7f3d0}
@@ -1626,23 +2398,44 @@ function printKitchen(){
 function updatePill(){
   const n = orders.filter(o => !o.done).length;
   const pill = document.getElementById('pendingPill');
-  pill.textContent = n;
-  pill.classList.toggle('hide', n === 0);
+  if(pill){
+    pill.textContent = n;
+    pill.classList.toggle('hide', n === 0);
+  }
   const tabPill = document.getElementById('tabAntrianCount');
   if(tabPill) tabPill.textContent = n;
+  const statusPill = document.getElementById('statusPill');
+  if(statusPill){
+    statusPill.textContent = n;
+    statusPill.classList.toggle('hide', n === 0);
+  }
 }
 
 window.addEventListener('storage', e=>{
   if(e.key === STORE_ORDERS){
     orders = loadOrders();
-    if(document.getElementById('view-admin').classList.contains('active')) renderAdmin();
+    if(isAdminMode && document.getElementById('view-admin').classList.contains('active')) renderAdmin();
+    if(document.getElementById('view-status').classList.contains('active')) renderStatusLive();
+    if(document.getElementById('view-order').classList.contains('active')) renderMenu();
     updatePill();
+  }
+  if(e.key === STORE_STOCK || e.key === STORE_SETTINGS){
+    renderMenu();
+  }
+  if(e.key === STORE_MAPS){
+    document.querySelectorAll('[data-maps-link]').forEach(a => a.href = getMapsUrl());
   }
 });
 
+/* =========================================================
+   INIT
+   ========================================================= */
+setupAdminTab();
 renderMenu();
 renderCart();
 updatePill();
+startRealtime();
+bindScrollWatch();
 </script>
 </body>
 </html>
